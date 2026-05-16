@@ -218,18 +218,69 @@
 
   .section { display: none; }
   .section.active { display: block; }
+
+  /* APP 4 - Repaso de errores */
+  body.mode-4 { background: #2d1b00; }
+  .tab.active-4 { background: #7d3c00; color: white; }
+  .btn-4 { background: #7d3c00; color: white; }
+  .qn-4 { background: #7d3c00; }
+  .pf-4 { background: #7d3c00; }
+  .option.selected-4 { border-color: #7d3c00 !important; }
+
+  /* Pestaña Errores */
+  body.mode-5 { background: #2c1a1a; }
+  .tab.active-5 { background: #8b1a1a; color: white; }
+
+  /* Panel errores */
+  .errors-panel { padding: 0.5rem 0; }
+  .errors-empty { color: #bbb; font-size: 0.9rem; padding: 2rem 0; }
+  .errors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+  .error-card {
+    background: #fff5f5;
+    border: 1.5px solid #f1948a;
+    border-radius: 10px;
+    padding: 0.4rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .error-card:hover { border-color: #c0392b; }
+  .error-card img { max-width: 100%; max-height: 70px; object-fit: contain; }
+  .error-card-name { font-size: 0.6rem; color: #555; margin-top: 3px; line-height: 1.2; }
+  .error-card-count { font-size: 0.65rem; color: #b03a2e; font-weight: 700; }
+  .errors-header { font-size: 0.8rem; color: #999; margin-bottom: 0.4rem; }
+  .btn-reset { background: #eee; color: #666; font-size: 0.78rem; padding: 6px 14px; }
+  .btn-repaso { background: #7d3c00; color: white; font-size: 0.78rem; padding: 6px 14px; }
+  .errors-actions { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 0.6rem; flex-wrap: wrap; }
+
+  /* No-errors state in App4 */
+  .app4-empty { padding: 2rem 0; color: #bbb; font-size: 0.9rem; }
+
+  /* Racha */
+  .streak-bar { font-size: 0.75rem; color: #f39c12; font-weight: 700; min-height: 18px; margin-top: 2px; }
 </style>
 </head>
 <body class="mode-1">
 <div class="card">
   <div class="tabs">
-    <button class="tab active-1" onclick="switchApp(1)">✏️ App 1 · Escribir</button>
-    <button class="tab" onclick="switchApp(2)">🔵 App 2 · Elegir</button>
-    <button class="tab" onclick="switchApp(3)">🌙 App 3 · Difícil</button>
+    <button class="tab active-1" onclick="switchApp(1)">✏️ Escribir</button>
+    <button class="tab" onclick="switchApp(2)">🔵 Elegir</button>
+    <button class="tab" onclick="switchApp(3)">🌙 Difícil</button>
+    <button class="tab" onclick="switchApp(4)">🔁 Repaso</button>
+    <button class="tab" onclick="switchApp(5)">❌ Errores</button>
   </div>
   <div class="app-title" id="app-title">Quiz · Escribir el nombre</div>
   <div class="subtitle">Manual de Educación Vial · Municipio de Tigre</div>
   <div class="counter" id="counter">Cargando...</div>
+  <div class="streak-bar" id="streak-bar"></div>
 
   <div class="timer-wrap" id="timer-wrap">
     <div class="timer-bar-bg"><div class="timer-bar" id="timer-bar"></div></div>
@@ -266,9 +317,36 @@
     </div>
   </div>
 
+  <!-- APP 4 - Repaso de errores -->
+  <div class="section" id="sec4">
+    <div class="app4-empty" id="a4-empty" style="display:none">🎉 No tenés errores registrados.<br>¡Completá otros modos primero!</div>
+    <div id="a4-quiz">
+      <div class="question-name qn-4" id="a4-name">...</div>
+      <div class="options">
+        <div class="opt-wrap"><div class="option" id="a4-opt0" onclick="a4Pick(0)"><img id="a4-img0" src=""></div><div class="opt-label" id="a4-lbl0"></div></div>
+        <div class="opt-wrap"><div class="option" id="a4-opt1" onclick="a4Pick(1)"><img id="a4-img1" src=""></div><div class="opt-label" id="a4-lbl1"></div></div>
+        <div class="opt-wrap"><div class="option" id="a4-opt2" onclick="a4Pick(2)"><img id="a4-img2" src=""></div><div class="opt-label" id="a4-lbl2"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP 5 - Panel de errores -->
+  <div class="section" id="sec5">
+    <div class="errors-panel" id="errors-panel">
+      <div class="errors-empty" id="errors-empty">Sin errores registrados todavía 🎉</div>
+      <div class="errors-actions" id="errors-actions" style="display:none">
+        <button class="btn btn-repaso" onclick="switchApp(4)">🔁 Repasar errores</button>
+        <button class="btn btn-reset" onclick="clearErrors()">🗑 Limpiar errores</button>
+      </div>
+      <div class="errors-header" id="errors-header"></div>
+      <div class="errors-grid" id="errors-grid"></div>
+    </div>
+  </div>
+
   <div class="feedback" id="feedback"></div>
   <button class="btn btn-next" id="btn-next" onclick="nextRound()">Siguiente →</button>
-  <div class="score-bar">
+  <div class="score-bar" style="position:relative;">
+    <button class="btn btn-reset" onclick="resetCurrentApp()" title="Reiniciar este modo" style="position:absolute;right:0;top:-2px;padding:3px 10px;font-size:0.7rem;">↺ Reiniciar</button>
     <span>Correctas: <span class="ok" id="sc">0</span></span>
     <span>Incorrectas: <span class="ko" id="sw">0</span></span>
     <span id="pct"></span>
@@ -286,16 +364,51 @@ const TOTAL_GROUPED = 181;
 const TIMER_SEC = 10;
 
 let currentApp = 1;
-let queues = {1:[],2:[],3:[]};
-let scores = {1:{c:0,w:0},2:{c:0,w:0},3:{c:0,w:0}};
+let queues = {1:[],2:[],3:[],4:[]};
+let scores = {1:{c:0,w:0},2:{c:0,w:0},3:{c:0,w:0},4:{c:0,w:0}};
 let answered = false, a1Checked = false;
 let correctSlot = 0, currentOpts = [];
 let timerInterval = null, timerLeft = TIMER_SEC;
+let streak = 0;
+
+// --- ERRORES ---
+let errorMap = {}; // {idx: count}
+
+function loadErrors() {
+  try { errorMap = JSON.parse(localStorage.getItem('sq_errors') || '{}'); } catch(e) { errorMap = {}; }
+}
+function saveErrors() {
+  try { localStorage.setItem('sq_errors', JSON.stringify(errorMap)); } catch(e) {}
+}
+function addError(idx) {
+  errorMap[idx] = (errorMap[idx] || 0) + 1;
+  saveErrors();
+}
+function clearErrors() {
+  if(!confirm('¿Limpiar todos los errores?')) return;
+  errorMap = {};
+  saveErrors();
+  renderErrorsPanel();
+  queues[4] = [];
+}
+
+// --- SCORES persistentes ---
+function loadScores() {
+  try {
+    const s = JSON.parse(localStorage.getItem('sq_scores') || 'null');
+    if(s) scores = s;
+  } catch(e) {}
+}
+function saveScores() {
+  try { localStorage.setItem('sq_scores', JSON.stringify(scores)); } catch(e) {}
+}
 
 const appTitles = {
   1:'Quiz · Escribir el nombre',
   2:'Quiz · Elegir la señal',
-  3:'Quiz · Modo Difícil — 10 seg'
+  3:'Quiz · Modo Difícil — 10 seg',
+  4:'Repaso · Solo errores',
+  5:'Mis señales falladas'
 };
 
 function shuffle(arr) {
@@ -314,207 +427,364 @@ function normalize(s) {
     .replace(/ +/g," ").trim();
 }
 
+function updateStreak(correct) {
+  if(currentApp === 5) return;
+  if(correct) { streak++; } else { streak = 0; }
+  const bar = document.getElementById('streak-bar');
+  if(streak >= 3) {
+    bar.textContent = '🔥 Racha: ' + streak + ' seguidas';
+  } else {
+    bar.textContent = '';
+  }
+}
+
 function updateScore() {
-  const s=scores[currentApp];
-  document.getElementById('sc').textContent=s.c;
-  document.getElementById('sw').textContent=s.w;
-  const tot=s.c+s.w;
-  document.getElementById('pct').textContent=tot>0?Math.round(s.c/tot*100)+'% acierto':'';
+  const s = scores[currentApp] || {c:0,w:0};
+  document.getElementById('sc').textContent = s.c;
+  document.getElementById('sw').textContent = s.w;
+  const tot = s.c + s.w;
+  document.getElementById('pct').textContent = tot > 0 ? Math.round(s.c/tot*100) + '% acierto' : '';
+  saveScores();
 }
 
 function startTimer() {
   stopTimer();
-  timerLeft=TIMER_SEC;
+  timerLeft = TIMER_SEC;
   updateTimerUI();
-  timerInterval=setInterval(()=>{
-    timerLeft-=0.1;
-    if(timerLeft<=0){ timerLeft=0; updateTimerUI(); stopTimer(); onTimeout(); }
+  timerInterval = setInterval(() => {
+    timerLeft -= 0.1;
+    if(timerLeft <= 0) { timerLeft = 0; updateTimerUI(); stopTimer(); onTimeout(); }
     else updateTimerUI();
-  },100);
+  }, 100);
 }
 
 function stopTimer() {
-  if(timerInterval){ clearInterval(timerInterval); timerInterval=null; }
+  if(timerInterval) { clearInterval(timerInterval); timerInterval = null; }
 }
 
 function updateTimerUI() {
-  const pct=(timerLeft/TIMER_SEC)*100;
-  const bar=document.getElementById('timer-bar');
-  const num=document.getElementById('timer-num');
-  bar.style.width=pct+'%';
-  num.textContent=Math.ceil(timerLeft);
-  const w=timerLeft<=5&&timerLeft>2.5, d=timerLeft<=2.5;
-  bar.className='timer-bar'+(d?' danger':w?' warning':'');
-  num.className='timer-num'+(d?' danger':w?' warning':'');
+  const pct = (timerLeft/TIMER_SEC)*100;
+  const bar = document.getElementById('timer-bar');
+  const num = document.getElementById('timer-num');
+  bar.style.width = pct + '%';
+  num.textContent = Math.ceil(timerLeft);
+  const w = timerLeft<=5&&timerLeft>2.5, d = timerLeft<=2.5;
+  bar.className = 'timer-bar' + (d?' danger':w?' warning':'');
+  num.className = 'timer-num' + (d?' danger':w?' warning':'');
 }
 
 function onTimeout() {
   if(answered) return;
-  answered=true;
+  answered = true;
   scores[3].w++;
+  updateStreak(false);
+  addError(currentOpts[correctSlot].idx);
   for(let i=0;i<3;i++) {
-    const opt=document.getElementById('a3-opt'+i);
+    const opt = document.getElementById('a3-opt'+i);
     opt.classList.add('disabled','timeout');
-    const lbl=document.getElementById('a3-lbl'+i);
-    lbl.textContent=signals[currentOpts[i].idx].name;
+    const lbl = document.getElementById('a3-lbl'+i);
+    lbl.textContent = signals[currentOpts[i].idx].name;
     lbl.classList.add('show');
   }
   document.getElementById('a3-opt'+correctSlot).classList.remove('timeout');
   document.getElementById('a3-opt'+correctSlot).classList.add('correct');
-  const fb=document.getElementById('feedback');
-  fb.className='feedback timeout';
-  fb.textContent='⏱ ¡Tiempo! Era: '+signals[currentOpts[correctSlot].idx].name;
-  fb.style.display='block';
-  const bn=document.getElementById('btn-next');
-  bn.className='btn btn-next btn-3';
-  bn.style.display='inline-block';
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback timeout';
+  fb.textContent = '⏱ ¡Tiempo! Era: ' + signals[currentOpts[correctSlot].idx].name;
+  fb.style.display = 'block';
+  const bn = document.getElementById('btn-next');
+  bn.className = 'btn btn-next btn-3';
+  bn.style.display = 'inline-block';
   updateScore();
 }
 
 function switchApp(n) {
   stopTimer();
-  currentApp=n;
-  document.querySelectorAll('.tab').forEach((t,i)=>{
-    t.className='tab'+(i+1===n?' active-'+n:'');
+  currentApp = n;
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.className = 'tab' + (i+1===n ? ' active-'+n : '');
   });
-  document.body.className='mode-'+n;
-  document.getElementById('prog').className='progress-fill pf-'+n;
-  document.getElementById('app-title').textContent=appTitles[n];
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.body.className = 'mode-' + n;
+  document.getElementById('prog').className = 'progress-fill pf-' + (n<=4?n:1);
+  document.getElementById('app-title').textContent = appTitles[n];
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('sec'+n).classList.add('active');
-  document.getElementById('feedback').style.display='none';
-  document.getElementById('btn-next').style.display='none';
-  const tw=document.getElementById('timer-wrap');
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('streak-bar').textContent = '';
+  streak = 0;
+  const tw = document.getElementById('timer-wrap');
   if(n===3) tw.classList.add('visible'); else tw.classList.remove('visible');
-  updateScore();
-  nextRound();
+  // Score bar and progress only visible in quiz modes
+  const scorebar = document.querySelector('.score-bar');
+  const progress = document.querySelector('.progress');
+  const counter = document.getElementById('counter');
+  if(n===5) {
+    scorebar.style.display='none';
+    progress.style.display='none';
+    counter.style.display='none';
+    renderErrorsPanel();
+  } else {
+    scorebar.style.display='';
+    progress.style.display='';
+    counter.style.display='';
+    updateScore();
+    nextRound();
+  }
 }
 
 function nextRound() {
   stopTimer();
-  document.getElementById('feedback').style.display='none';
-  document.getElementById('btn-next').style.display='none';
-  answered=false; a1Checked=false;
+  document.getElementById('feedback').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  answered = false; a1Checked = false;
 
-  if(currentApp===3) {
-    if(queues[3].length===0) queues[3]=shuffle([...groupedIndices]);
-    const ci=queues[3].pop();
-    const done=TOTAL_GROUPED-queues[3].length;
-    document.getElementById('counter').textContent=`Pregunta ${done} de ${TOTAL_GROUPED}`;
-    document.getElementById('prog').style.width=(done/TOTAL_GROUPED*100)+'%';
-    const peers=shuffle(smartPeers[String(ci)]||[]);
-    const d1=peers[0]??((ci+1)%TOTAL);
-    const d2=peers[1]??((ci+2)%TOTAL);
-    currentOpts=shuffle([{idx:ci,isCorrect:true},{idx:d1,isCorrect:false},{idx:d2,isCorrect:false}]);
-    correctSlot=currentOpts.findIndex(o=>o.isCorrect);
-    document.getElementById('a3-name').textContent=signals[ci].name;
+  if(currentApp === 3) {
+    if(queues[3].length===0) queues[3] = shuffle([...groupedIndices]);
+    const ci = queues[3].pop();
+    const done = TOTAL_GROUPED - queues[3].length;
+    document.getElementById('counter').textContent = `Pregunta ${done} de ${TOTAL_GROUPED}`;
+    document.getElementById('prog').style.width = (done/TOTAL_GROUPED*100) + '%';
+    const peers = shuffle(smartPeers[String(ci)] || []);
+    const d1 = peers[0] ?? ((ci+1)%TOTAL);
+    const d2 = peers[1] ?? ((ci+2)%TOTAL);
+    currentOpts = shuffle([{idx:ci,isCorrect:true},{idx:d1,isCorrect:false},{idx:d2,isCorrect:false}]);
+    correctSlot = currentOpts.findIndex(o=>o.isCorrect);
+    document.getElementById('a3-name').textContent = signals[ci].name;
     for(let i=0;i<3;i++) {
-      document.getElementById('a3-opt'+i).className='option';
-      document.getElementById('a3-img'+i).src=signals[currentOpts[i].idx].img;
-      const lbl=document.getElementById('a3-lbl'+i);
-      lbl.textContent=''; lbl.classList.remove('show');
+      document.getElementById('a3-opt'+i).className = 'option';
+      document.getElementById('a3-img'+i).src = signals[currentOpts[i].idx].img;
+      const lbl = document.getElementById('a3-lbl'+i);
+      lbl.textContent = ''; lbl.classList.remove('show');
     }
     startTimer();
     return;
   }
 
-  if(queues[currentApp].length===0) queues[currentApp]=shuffle([...Array(TOTAL).keys()]);
-  const ci=queues[currentApp].pop();
-  const done=TOTAL-queues[currentApp].length;
-  document.getElementById('counter').textContent=`Pregunta ${done} de ${TOTAL}`;
-  document.getElementById('prog').style.width=(done/TOTAL*100)+'%';
-
-  if(currentApp===1) {
-    document.getElementById('a1-img').src=signals[ci].img;
-    document.getElementById('a1-input').value='';
-    document.getElementById('a1-input').disabled=false;
-    document.getElementById('a1-btn').textContent='Verificar ↵';
-    document.getElementById('a1-btn').className='btn btn-1';
-    document.getElementById('a1-input').focus();
-    window._a1ci=ci;
-  } else {
-    const peers=shuffle(allPeers[String(ci)]||[]);
-    const d1=peers[0]??((ci+1)%TOTAL);
-    const d2=peers[1]??((ci+2)%TOTAL);
-    currentOpts=shuffle([{idx:ci,isCorrect:true},{idx:d1,isCorrect:false},{idx:d2,isCorrect:false}]);
-    correctSlot=currentOpts.findIndex(o=>o.isCorrect);
-    document.getElementById('a2-name').textContent=signals[ci].name;
+  if(currentApp === 4) {
+    const errKeys = Object.keys(errorMap).map(Number);
+    if(errKeys.length === 0) {
+      document.getElementById('a4-empty').style.display = 'block';
+      document.getElementById('a4-quiz').style.display = 'none';
+      document.getElementById('counter').textContent = '';
+      document.getElementById('prog').style.width = '0%';
+      return;
+    }
+    document.getElementById('a4-empty').style.display = 'none';
+    document.getElementById('a4-quiz').style.display = 'block';
+    if(queues[4].length === 0) queues[4] = shuffle([...errKeys]);
+    const ci = queues[4].pop();
+    const validErr = Object.keys(errorMap).map(Number);
+    const safeCI = validErr.includes(ci) ? ci : validErr[0];
+    const done = errKeys.length - queues[4].length;
+    document.getElementById('counter').textContent = `Repaso ${done} de ${errKeys.length}`;
+    document.getElementById('prog').style.width = (done/errKeys.length*100) + '%';
+    // Build distractors from smart peers
+    const peers = shuffle((smartPeers[String(safeCI)] || []).filter(p => p !== safeCI));
+    const d1 = peers[0] ?? ((safeCI+1)%TOTAL);
+    const d2 = peers[1] ?? ((safeCI+2)%TOTAL);
+    currentOpts = shuffle([{idx:safeCI,isCorrect:true},{idx:d1,isCorrect:false},{idx:d2,isCorrect:false}]);
+    correctSlot = currentOpts.findIndex(o=>o.isCorrect);
+    document.getElementById('a4-name').textContent = signals[safeCI].name;
     for(let i=0;i<3;i++) {
-      document.getElementById('a2-opt'+i).className='option';
-      document.getElementById('a2-img'+i).src=signals[currentOpts[i].idx].img;
-      const lbl=document.getElementById('a2-lbl'+i);
-      lbl.textContent=''; lbl.classList.remove('show');
+      document.getElementById('a4-opt'+i).className = 'option';
+      document.getElementById('a4-img'+i).src = signals[currentOpts[i].idx].img;
+      const lbl = document.getElementById('a4-lbl'+i);
+      lbl.textContent = ''; lbl.classList.remove('show');
+    }
+    return;
+  }
+
+  if(queues[currentApp].length===0) queues[currentApp] = shuffle([...Array(TOTAL).keys()]);
+  const ci = queues[currentApp].pop();
+  const done = TOTAL - queues[currentApp].length;
+  document.getElementById('counter').textContent = `Pregunta ${done} de ${TOTAL}`;
+  document.getElementById('prog').style.width = (done/TOTAL*100) + '%';
+
+  if(currentApp === 1) {
+    document.getElementById('a1-img').src = signals[ci].img;
+    document.getElementById('a1-input').value = '';
+    document.getElementById('a1-input').disabled = false;
+    document.getElementById('a1-btn').textContent = 'Verificar ↵';
+    document.getElementById('a1-btn').className = 'btn btn-1';
+    document.getElementById('a1-input').focus();
+    window._a1ci = ci;
+  } else {
+    const peers = shuffle(allPeers[String(ci)] || []);
+    const d1 = peers[0] ?? ((ci+1)%TOTAL);
+    const d2 = peers[1] ?? ((ci+2)%TOTAL);
+    currentOpts = shuffle([{idx:ci,isCorrect:true},{idx:d1,isCorrect:false},{idx:d2,isCorrect:false}]);
+    correctSlot = currentOpts.findIndex(o=>o.isCorrect);
+    document.getElementById('a2-name').textContent = signals[ci].name;
+    for(let i=0;i<3;i++) {
+      document.getElementById('a2-opt'+i).className = 'option';
+      document.getElementById('a2-img'+i).src = signals[currentOpts[i].idx].img;
+      const lbl = document.getElementById('a2-lbl'+i);
+      lbl.textContent = ''; lbl.classList.remove('show');
     }
   }
 }
 
 function a1Check() {
-  if(a1Checked){nextRound();return;}
-  const input=normalize(document.getElementById('a1-input').value);
-  if(!input){a1Skip();return;}
-  const answer=normalize(signals[window._a1ci].name);
-  const ok=input===answer||(input.length>=5&&answer.includes(input))||(answer.length>=5&&input.includes(answer));
-  document.getElementById('a1-input').disabled=true;
-  document.getElementById('a1-btn').textContent='Siguiente →';
-  a1Checked=true;
-  const fb=document.getElementById('feedback');
-  if(ok){scores[1].c++;fb.className='feedback correct';fb.textContent='✓ ¡Correcto! · '+signals[window._a1ci].name;}
-  else{scores[1].w++;fb.className='feedback wrong';fb.textContent='✗ Era: '+signals[window._a1ci].name;}
-  fb.style.display='block';
+  if(a1Checked) { nextRound(); return; }
+  const input = normalize(document.getElementById('a1-input').value);
+  if(!input) { a1Skip(); return; }
+  const answer = normalize(signals[window._a1ci].name);
+  const ok = input===answer || (input.length>=5&&answer.includes(input)) || (answer.length>=5&&input.includes(answer));
+  document.getElementById('a1-input').disabled = true;
+  document.getElementById('a1-btn').textContent = 'Siguiente →';
+  a1Checked = true;
+  const fb = document.getElementById('feedback');
+  if(ok) {
+    scores[1].c++;
+    updateStreak(true);
+    fb.className = 'feedback correct'; fb.textContent = '✓ ¡Correcto! · ' + signals[window._a1ci].name;
+  } else {
+    scores[1].w++;
+    updateStreak(false);
+    addError(window._a1ci);
+    fb.className = 'feedback wrong'; fb.textContent = '✗ Era: ' + signals[window._a1ci].name;
+  }
+  fb.style.display = 'block';
   updateScore();
 }
 
 function a1Skip() {
-  if(a1Checked){nextRound();return;}
+  if(a1Checked) { nextRound(); return; }
   scores[1].w++;
-  document.getElementById('a1-input').disabled=true;
-  document.getElementById('a1-btn').textContent='Siguiente →';
-  a1Checked=true;
-  const fb=document.getElementById('feedback');
-  fb.className='feedback wrong';
-  fb.textContent='→ '+signals[window._a1ci].name;
-  fb.style.display='block';
+  updateStreak(false);
+  addError(window._a1ci);
+  document.getElementById('a1-input').disabled = true;
+  document.getElementById('a1-btn').textContent = 'Siguiente →';
+  a1Checked = true;
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback wrong';
+  fb.textContent = '→ ' + signals[window._a1ci].name;
+  fb.style.display = 'block';
   updateScore();
 }
 
-document.getElementById('a1-input').addEventListener('keydown',e=>{
+document.getElementById('a1-input').addEventListener('keydown', e => {
   if(e.key==='Enter') a1Check();
 });
 
-function a23Pick(app,slot) {
-  if(answered||app!==currentApp) return;
+function a23Pick(app, slot) {
+  if(answered || app!==currentApp) return;
   stopTimer();
-  answered=true;
-  const px='a'+app+'-';
+  answered = true;
+  const px = 'a'+app+'-';
   for(let i=0;i<3;i++) {
     document.getElementById(px+'opt'+i).classList.add('disabled');
-    const lbl=document.getElementById(px+'lbl'+i);
-    lbl.textContent=signals[currentOpts[i].idx].name;
+    const lbl = document.getElementById(px+'lbl'+i);
+    lbl.textContent = signals[currentOpts[i].idx].name;
     lbl.classList.add('show');
   }
-  const fb=document.getElementById('feedback');
-  const bn=document.getElementById('btn-next');
-  bn.className='btn btn-next btn-'+app;
+  const fb = document.getElementById('feedback');
+  const bn = document.getElementById('btn-next');
+  bn.className = 'btn btn-next btn-'+app;
   if(slot===correctSlot) {
     scores[app].c++;
+    updateStreak(true);
     document.getElementById(px+'opt'+slot).classList.add('correct');
-    fb.className='feedback correct'; fb.textContent='✓ ¡Correcto!';
+    fb.className = 'feedback correct'; fb.textContent = '✓ ¡Correcto!';
   } else {
     scores[app].w++;
+    updateStreak(false);
+    addError(currentOpts[correctSlot].idx);
     document.getElementById(px+'opt'+slot).classList.add('wrong');
     document.getElementById(px+'opt'+correctSlot).classList.add('correct');
-    fb.className='feedback wrong'; fb.textContent='✗ Incorrecto.';
+    fb.className = 'feedback wrong'; fb.textContent = '✗ Incorrecto.';
   }
-  fb.style.display='block';
-  bn.style.display='inline-block';
+  fb.style.display = 'block';
+  bn.style.display = 'inline-block';
   updateScore();
 }
 
+function a4Pick(slot) {
+  if(answered || currentApp!==4) return;
+  answered = true;
+  for(let i=0;i<3;i++) {
+    document.getElementById('a4-opt'+i).classList.add('disabled');
+    const lbl = document.getElementById('a4-lbl'+i);
+    lbl.textContent = signals[currentOpts[i].idx].name;
+    lbl.classList.add('show');
+  }
+  const fb = document.getElementById('feedback');
+  const bn = document.getElementById('btn-next');
+  bn.className = 'btn btn-next btn-4';
+  if(slot===correctSlot) {
+    scores[4].c++;
+    updateStreak(true);
+    // Correct in repaso: reduce error count
+    const idx = currentOpts[correctSlot].idx;
+    if(errorMap[idx]) {
+      errorMap[idx]--;
+      if(errorMap[idx] <= 0) delete errorMap[idx];
+      saveErrors();
+    }
+    document.getElementById('a4-opt'+slot).classList.add('correct');
+    fb.className = 'feedback correct'; fb.textContent = '✓ ¡Correcto! Error eliminado del repaso.';
+  } else {
+    scores[4].w++;
+    updateStreak(false);
+    addError(currentOpts[correctSlot].idx);
+    document.getElementById('a4-opt'+slot).classList.add('wrong');
+    document.getElementById('a4-opt'+correctSlot).classList.add('correct');
+    fb.className = 'feedback wrong'; fb.textContent = '✗ Incorrecto. Se suma al repaso.';
+  }
+  fb.style.display = 'block';
+  bn.style.display = 'inline-block';
+  updateScore();
+}
+
+function renderErrorsPanel() {
+  const keys = Object.keys(errorMap).map(Number).sort((a,b)=>errorMap[b]-errorMap[a]);
+  const empty = document.getElementById('errors-empty');
+  const grid = document.getElementById('errors-grid');
+  const actions = document.getElementById('errors-actions');
+  const header = document.getElementById('errors-header');
+  if(keys.length === 0) {
+    empty.style.display = 'block';
+    grid.innerHTML = '';
+    actions.style.display = 'none';
+    header.textContent = '';
+  } else {
+    empty.style.display = 'none';
+    actions.style.display = 'flex';
+    header.textContent = `${keys.length} señale${keys.length>1?'s':''} fallada${keys.length>1?'s':''} — ordenadas por frecuencia`;
+    grid.innerHTML = keys.map(idx => {
+      const cnt = errorMap[idx];
+      const name = signals[idx].name;
+      const img = signals[idx].img;
+      return `<div class="error-card" title="${name}">
+        <img src="${img}" alt="${name}">
+        <div class="error-card-name">${name}</div>
+        <div class="error-card-count">✗ ${cnt} vez${cnt>1?'es':''}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// --- Botón Reiniciar por modo ---
+function resetCurrentApp() {
+  if(!confirm('¿Reiniciar puntaje de este modo?')) return;
+  scores[currentApp] = {c:0, w:0};
+  queues[currentApp] = [];
+  streak = 0;
+  document.getElementById('streak-bar').textContent = '';
+  saveScores();
+  if(currentApp!==5) { updateScore(); nextRound(); }
+}
+
+// Init
+loadErrors();
+loadScores();
 for(let a=1;a<=3;a++) {
   queues[a] = a===3 ? shuffle([...groupedIndices]) : shuffle([...Array(TOTAL).keys()]);
 }
+queues[4] = [];
 switchApp(1);
 </script>
-<div style="text-align:center;padding:1.2rem 0 1rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">v.004</div>
+<div style="text-align:center;padding:1.2rem 0 1rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">v.004.1</div>
 </body>
 </html>
