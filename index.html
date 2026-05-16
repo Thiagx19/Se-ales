@@ -17,7 +17,7 @@
     transition: background 0.3s;
   }
   body.mode-1 { background: #1b2838; }
-  body.mode-2 { background: #0d2137; }
+  body.mode-2 { background: #3d1a00; }
   body.mode-3 { background: #1a1a2e; }
 
   .card {
@@ -50,7 +50,7 @@
   }
   .tab:last-child { border-right: none; }
   .tab.active-1 { background: #1b2838; color: white; }
-  .tab.active-2 { background: #0d2137; color: white; }
+  .tab.active-2 { background: #b45000; color: white; }
   .tab.active-3 { background: #1a1a2e; color: white; }
 
   .app-title { font-size: 1rem; font-weight: 700; color: #333; }
@@ -105,7 +105,7 @@
     color: white;
   }
   .qn-1 { background: #1b2838; }
-  .qn-2 { background: #0d2137; }
+  .qn-2 { background: #b45000; }
   .qn-3 { background: #1a1a2e; }
 
   .signal-wrap {
@@ -183,7 +183,7 @@
   }
   .btn:hover { opacity: 0.85; }
   .btn-1 { background: #1b2838; color: white; }
-  .btn-2 { background: #0d2137; color: white; }
+  .btn-2 { background: #b45000; color: white; }
   .btn-3 { background: #1a1a2e; color: white; }
   .btn-skip { background: #ececec; color: #555; }
   .btn-next { display: none; }
@@ -213,7 +213,7 @@
   .progress { height: 4px; background: #eee; border-radius: 2px; margin-top: 0.8rem; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
   .pf-1 { background: #1b2838; }
-  .pf-2 { background: #0d2137; }
+  .pf-2 { background: #b45000; }
   .pf-3 { background: #1a1a2e; }
 
   .section { display: none; }
@@ -306,13 +306,115 @@
 
   /* Racha */
   .streak-bar { font-size: 0.75rem; color: #f39c12; font-weight: 700; min-height: 18px; margin-top: 2px; }
+
+  /* ── FLASH MODE ── */
+  .flash-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    background: #f7f7f7;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin: 0.4rem 0 0.5rem;
+  }
+  .flash-wrap img {
+    max-width: 190px;
+    max-height: 190px;
+    object-fit: contain;
+  }
+  .flash-hint {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #b45000;
+    text-align: center;
+    margin-bottom: 0.3rem;
+    opacity: 0.9;
+  }
+  /* Timer bar del flash */
+  .flash-timer-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+  .flash-tbar {
+    flex: 1;
+    height: 6px;
+    background: #b45000;
+    border-radius: 4px;
+    transition: width 0.1s linear, background 0.3s;
+  }
+  .flash-tbar.warning { background: #e67e22; }
+  .flash-tbar.danger  { background: #c0392b; }
+  .flash-tnum {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #b45000;
+    min-width: 16px;
+    text-align: right;
+  }
+  .flash-tnum.warning { color: #e67e22; }
+  .flash-tnum.danger  { color: #c0392b; }
+  .flash-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  .flash-opt {
+    background: #fff;
+    border: 2px solid #e8e8e8;
+    border-radius: 12px;
+    padding: 14px 8px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #2c2c2c;
+    cursor: pointer;
+    text-align: center;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    transition: border-color 0.12s, background 0.12s, transform 0.08s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    min-height: 56px;
+  }
+  .flash-opt:active { transform: scale(0.96); }
+  .flash-opt:hover  { border-color: #b45000; background: #fff7f0; }
+  .flash-opt.correct {
+    border-color: #1a7a40 !important;
+    background: #eafbf0; color: #1a7a40;
+    box-shadow: 0 0 0 3px rgba(26,122,64,0.15);
+  }
+  .flash-opt.wrong {
+    border-color: #c0392b !important;
+    background: #fdecea; color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192,57,43,0.12);
+  }
+  .flash-opt.disabled { pointer-events: none; opacity: 0.65; }
+  .btn-reiniciar {
+    background: none;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    color: #aaa;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    cursor: pointer;
+    line-height: 1.4;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-reiniciar:hover { border-color: #c0392b; color: #c0392b; }
 </style>
 </head>
 <body class="mode-1">
 <div class="card">
   <div class="tabs">
     <button class="tab active-1" onclick="switchApp(1)">✏️ Escribir</button>
-    <button class="tab" onclick="switchApp(2)">🔵 Elegir</button>
+    <button class="tab" onclick="switchApp(2)">⚡ Flash</button>
     <button class="tab" onclick="switchApp(3)">🌙 Difícil</button>
   </div>
   <div class="app-title" id="app-title">Quiz · Escribir el nombre</div>
@@ -335,13 +437,31 @@
     </div>
   </div>
 
-  <!-- APP 2 -->
-  <div class="section" id="sec2">
+  <!-- APP 2 - FLASH MODE -->
+  <!-- APP 2 ORIGINAL (Elegir) guardada como comentario:
+  <div class="section" id="sec2-elegir-backup">
     <div class="question-name qn-2" id="a2-name">...</div>
     <div class="options">
       <div class="opt-wrap"><div class="option" id="a2-opt0" onclick="a23Pick(2,0)"><img id="a2-img0" src=""></div><div class="opt-label" id="a2-lbl0"></div></div>
       <div class="opt-wrap"><div class="option" id="a2-opt1" onclick="a23Pick(2,1)"><img id="a2-img1" src=""></div><div class="opt-label" id="a2-lbl1"></div></div>
       <div class="opt-wrap"><div class="option" id="a2-opt2" onclick="a23Pick(2,2)"><img id="a2-img2" src=""></div><div class="opt-label" id="a2-lbl2"></div></div>
+    </div>
+  </div>
+  -->
+  <div class="section" id="sec2">
+    <div class="flash-hint" id="flash-hint">¡Mirá bien!</div>
+    <div class="flash-wrap" id="flash-img-box">
+      <img id="flash-img" src="" alt="Señal">
+    </div>
+    <div class="flash-timer-wrap" id="flash-timer-wrap">
+      <div class="flash-tbar" id="flash-timer-bar"></div>
+      <span class="flash-tnum" id="flash-timer-num"></span>
+    </div>
+    <div class="flash-options" id="flash-options" style="display:none">
+      <button class="flash-opt" id="flash-opt0" onclick="flashPick(0)"></button>
+      <button class="flash-opt" id="flash-opt1" onclick="flashPick(1)"></button>
+      <button class="flash-opt" id="flash-opt2" onclick="flashPick(2)"></button>
+      <button class="flash-opt" id="flash-opt3" onclick="flashPick(3)"></button>
     </div>
   </div>
 
@@ -383,11 +503,11 @@
 
   <div class="feedback" id="feedback"></div>
   <button class="btn btn-next" id="btn-next" onclick="nextRound()">Siguiente →</button>
-  <div class="score-bar" style="position:relative;">
-    <button class="btn btn-reset" onclick="resetCurrentApp()" title="Reiniciar este modo" style="position:absolute;right:0;top:-2px;padding:3px 10px;font-size:0.7rem;">↺ Reiniciar</button>
+  <div class="score-bar">
     <span>Correctas: <span class="ok" id="sc">0</span></span>
     <span>Incorrectas: <span class="ko" id="sw">0</span></span>
     <span id="pct"></span>
+    <button class="btn-reiniciar" onclick="resetCurrentApp()" title="Reiniciar este modo">↺</button>
   </div>
   <div class="progress"><div class="progress-fill pf-1" id="prog"></div></div>
 </div>
@@ -424,7 +544,6 @@ function addError(idx) {
   updateExtButtons();
 }
 function clearErrors() {
-  if(!confirm('¿Limpiar todos los errores?')) return;
   errorMap = {};
   saveErrors();
   updateExtButtons();
@@ -445,7 +564,7 @@ function saveScores() {
 
 const appTitles = {
   1:'Quiz · Escribir el nombre',
-  2:'Quiz · Elegir la señal',
+  2:'Flash · Ver y recordar — 1.5 seg',
   3:'Quiz · Modo Difícil — 10 seg',
   4:'Repaso · Solo errores',
   5:'Mis señales falladas'
@@ -514,7 +633,8 @@ function updateTimerUI() {
 }
 
 function onTimeout() {
-  if(answered) return;
+  if(answered || currentApp !== 3) return;
+  if(!document.getElementById('a3-opt0')) return; // guard
   answered = true;
   scores[3].w++;
   updateStreak(false);
@@ -668,19 +788,139 @@ function nextRound() {
     document.getElementById('a1-input').focus();
     window._a1ci = ci;
   } else {
-    const peers = shuffle(allPeers[String(ci)] || []);
-    const d1 = peers[0] ?? ((ci+1)%TOTAL);
-    const d2 = peers[1] ?? ((ci+2)%TOTAL);
-    currentOpts = shuffle([{idx:ci,isCorrect:true},{idx:d1,isCorrect:false},{idx:d2,isCorrect:false}]);
-    correctSlot = currentOpts.findIndex(o=>o.isCorrect);
-    document.getElementById('a2-name').textContent = signals[ci].name;
-    for(let i=0;i<3;i++) {
-      document.getElementById('a2-opt'+i).className = 'option';
-      document.getElementById('a2-img'+i).src = signals[currentOpts[i].idx].img;
-      const lbl = document.getElementById('a2-lbl'+i);
-      lbl.textContent = ''; lbl.classList.remove('show');
-    }
+    // APP 2 = FLASH MODE
+    startFlash(ci);
   }
+}
+
+
+// ── FLASH MODE ──────────────────────────────────────────────
+const FLASH_SHOW_MS = 1500;   // señal visible
+let flashTimer = null;
+let flashOpts = [];
+let flashCorrect = 0;
+
+function startFlash(ci) {
+  clearInterval(flashTimer);
+  answered = false;
+
+  // Pick 3 distractors from allPeers
+  const peers = shuffle(allPeers[String(ci)] || []);
+  const distractors = [];
+  for(let p of peers) {
+    if(p !== ci) distractors.push(p);
+    if(distractors.length === 3) break;
+  }
+  while(distractors.length < 3) {
+    const r = Math.floor(Math.random()*TOTAL);
+    if(r !== ci && !distractors.includes(r)) distractors.push(r);
+  }
+  flashOpts = shuffle([ci, ...distractors]);
+  flashCorrect = flashOpts.indexOf(ci);
+
+  const box     = document.getElementById('flash-img-box');
+  const optWrap = document.getElementById('flash-options');
+  const hint    = document.getElementById('flash-hint');
+  const timerEl = document.getElementById('flash-timer-bar');
+  const timerNumEl = document.getElementById('flash-timer-num');
+
+  // Preparar opciones (ocultas durante el flash)
+  optWrap.style.display = 'none';
+  optWrap.style.visibility = 'visible';
+  for(let i=0;i<4;i++) {
+    const btn = document.getElementById('flash-opt'+i);
+    btn.textContent = signals[flashOpts[i]].name;
+    btn.className = 'flash-opt';
+  }
+
+  // Mostrar imagen grande
+  box.classList.remove('hidden');
+  box.style.display = 'flex';
+  document.getElementById('flash-img').src = signals[ci].img;
+  hint.textContent = '¡Mirá bien!';
+
+  window._flashCI = ci;
+
+  // Fase 1: mostrar imagen 1 segundo
+  flashTimer = setTimeout(() => {
+    // Ocultar imagen, mostrar opciones
+    box.style.display = 'none';
+    optWrap.style.display = 'grid';
+    hint.textContent = '¿Cuál era?';
+
+    // Fase 2: timer de 10s para elegir
+    let timeLeft = 10;
+    timerEl.style.width = '100%';
+    timerNumEl.textContent = timeLeft;
+
+    flashTimer = setInterval(() => {
+      timeLeft -= 0.1;
+      timerEl.style.width = (timeLeft / 10 * 100) + '%';
+      timerNumEl.textContent = Math.ceil(timeLeft);
+      timerEl.className = 'flash-tbar' + (timeLeft <= 3 ? ' danger' : timeLeft <= 5 ? ' warning' : '');
+      timerNumEl.className = 'flash-tnum' + (timeLeft <= 3 ? ' danger' : timeLeft <= 5 ? ' warning' : '');
+      if(timeLeft <= 0) {
+        clearInterval(flashTimer);
+        flashTimeout();
+      }
+    }, 100);
+  }, 1000);
+}
+
+function flashTimeout() {
+  if(answered || currentApp !== 2) return;
+  answered = true;
+  for(let i=0;i<4;i++) document.getElementById('flash-opt'+i).classList.add('disabled');
+  document.getElementById('flash-opt'+flashCorrect).classList.add('correct');
+  // Show image again
+  document.getElementById('flash-img-box').style.display = 'flex';
+  document.getElementById('flash-hint').textContent = signals[window._flashCI].name;
+  scores[2].w++;
+  updateStreak(false);
+  addError(window._flashCI);
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback timeout';
+  fb.textContent = '⏱ ¡Tiempo! Era: ' + signals[window._flashCI].name;
+  fb.style.display = 'block';
+  const bn = document.getElementById('btn-next');
+  bn.className = 'btn btn-next btn-2';
+  bn.style.display = 'inline-block';
+  updateScore();
+}
+
+function flashPick(slot) {
+  if(answered || currentApp !== 2) return;
+  clearInterval(flashTimer);
+  clearTimeout(flashTimer);
+  answered = true;
+  // Mostrar imagen como confirmación
+  const box = document.getElementById('flash-img-box');
+  box.style.display = 'flex';
+  document.getElementById('flash-hint').textContent = signals[window._flashCI].name;
+  for(let i=0;i<4;i++) document.getElementById('flash-opt'+i).classList.add('disabled');
+
+  const fb = document.getElementById('feedback');
+  const bn = document.getElementById('btn-next');
+  bn.className = 'btn btn-next btn-2';
+
+  if(slot === flashCorrect) {
+    scores[2].c++;
+    updateStreak(true);
+    document.getElementById('flash-opt'+slot).classList.add('correct');
+    fb.className = 'feedback correct';
+    fb.textContent = '⚡ ¡Correcto!';
+  } else {
+    scores[2].w++;
+    updateStreak(false);
+    addError(window._flashCI);
+    document.getElementById('flash-opt'+slot).classList.add('wrong');
+    document.getElementById('flash-opt'+flashCorrect).classList.add('correct');
+    fb.className = 'feedback wrong';
+    fb.textContent = '✗ Era: ' + signals[window._flashCI].name;
+  }
+  fb.style.display = 'block';
+  bn.style.display = 'inline-block';
+  updateScore();
 }
 
 function a1Check() {
@@ -728,6 +968,7 @@ document.getElementById('a1-input').addEventListener('keydown', e => {
 
 function a23Pick(app, slot) {
   if(answered || app!==currentApp) return;
+  if(!document.getElementById('a'+app+'-opt0')) return; // guard: elements must exist
   stopTimer();
   answered = true;
   const px = 'a'+app+'-';
@@ -825,12 +1066,12 @@ function renderErrorsPanel() {
 
 // --- Botón Reiniciar por modo ---
 function resetCurrentApp() {
-  if(!confirm('¿Reiniciar puntaje de este modo?')) return;
   scores[currentApp] = {c:0, w:0};
   queues[currentApp] = [];
   streak = 0;
   document.getElementById('streak-bar').textContent = '';
   saveScores();
+  clearErrors();
   if(currentApp!==5) { updateScore(); nextRound(); }
 }
 
@@ -849,6 +1090,6 @@ document.addEventListener('DOMContentLoaded', () => {
   <button class="bottom-btn" id="btn-repaso-ext" onclick="switchApp(4)">🔁 Repaso de errores</button>
   <button class="bottom-btn" id="btn-errores-ext" onclick="switchApp(5)">❌ Ver errores <span id="err-count-badge"></span></button>
 </div>
-<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V. 004.2.1</div>
+<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V.005.0.4</div>
 </body>
 </html>
