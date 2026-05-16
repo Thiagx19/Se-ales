@@ -2,6 +2,23 @@
 
 ---
 
+## V.005.1 — (actual)
+- **Pulido general de UI/UX**:
+  - Card con bordes más redondeados y sombra más profunda
+  - Tabs con mejor espaciado y letter-spacing
+  - Input con glow sutil al hacer foco
+  - Botones con feedback táctil (scale en :active) en toda la app
+  - Score bar simplificada: ✓ / ✗ en lugar de texto largo, porcentaje más pequeño
+  - Barra de progreso movida encima del score (orden más lógico: avance → puntaje)
+  - Botón ↺ Reiniciar alineado a la derecha del score con margin-left:auto
+  - Labels de opciones en negrita para mayor legibilidad
+  - Error cards con feedback táctil al presionar
+  - Botones Repaso/Limpiar en App 5 con hover state propio
+  - Espaciado general más ajustado para pantallas pequeñas
+  - Transición de progreso más suave (0.35s ease)
+
+---
+
 ## V.005.0.4 — (actual)
 - **Fix Limpiar errores (App 5)**: el botón no respondía porque usaba `confirm()`, bloqueado silenciosamente por Android en archivos locales. Eliminado, ahora limpia directo
 - **Reiniciar limpia errores también**: el botón ↺ ahora resetea puntaje, cola Y lista de errores del modo actual
