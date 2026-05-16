@@ -219,6 +219,46 @@
   .section { display: none; }
   .section.active { display: block; }
 
+  /* Botones externos debajo de la card */
+  .bottom-nav {
+    display: flex;
+    gap: 0.6rem;
+    margin-top: 0.9rem;
+    justify-content: center;
+  }
+  .bottom-btn {
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    border: 1.5px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    backdrop-filter: blur(4px);
+  }
+  .bottom-btn:hover {
+    background: rgba(255,255,255,0.22);
+    color: white;
+    border-color: rgba(255,255,255,0.4);
+  }
+  .bottom-btn.active-ext {
+    background: rgba(255,255,255,0.25);
+    color: white;
+    border-color: rgba(255,255,255,0.6);
+  }
+  #err-count-badge {
+    background: #c0392b;
+    color: white;
+    border-radius: 9px;
+    padding: 1px 7px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: 2px;
+    display: none;
+  }
+
   /* APP 4 - Repaso de errores */
   body.mode-4 { background: #2d1b00; }
   .tab.active-4 { background: #7d3c00; color: white; }
@@ -274,8 +314,6 @@
     <button class="tab active-1" onclick="switchApp(1)">✏️ Escribir</button>
     <button class="tab" onclick="switchApp(2)">🔵 Elegir</button>
     <button class="tab" onclick="switchApp(3)">🌙 Difícil</button>
-    <button class="tab" onclick="switchApp(4)">🔁 Repaso</button>
-    <button class="tab" onclick="switchApp(5)">❌ Errores</button>
   </div>
   <div class="app-title" id="app-title">Quiz · Escribir el nombre</div>
   <div class="subtitle">Manual de Educación Vial · Municipio de Tigre</div>
@@ -383,11 +421,13 @@ function saveErrors() {
 function addError(idx) {
   errorMap[idx] = (errorMap[idx] || 0) + 1;
   saveErrors();
+  updateExtButtons();
 }
 function clearErrors() {
   if(!confirm('¿Limpiar todos los errores?')) return;
   errorMap = {};
   saveErrors();
+  updateExtButtons();
   renderErrorsPanel();
   queues[4] = [];
 }
@@ -498,12 +538,30 @@ function onTimeout() {
   updateScore();
 }
 
+function updateExtButtons() {
+  const n = currentApp;
+  const btnR = document.getElementById('btn-repaso-ext');
+  const btnE = document.getElementById('btn-errores-ext');
+  const badge = document.getElementById('err-count-badge');
+  if(!btnR || !btnE || !badge) return;
+  btnR.className = 'bottom-btn' + (n===4?' active-ext':'');
+  btnE.className = 'bottom-btn' + (n===5?' active-ext':'');
+  const errCount = Object.keys(errorMap).length;
+  if(errCount > 0) {
+    badge.textContent = errCount;
+    badge.style.display = 'inline';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
 function switchApp(n) {
   stopTimer();
   currentApp = n;
   document.querySelectorAll('.tab').forEach((t,i) => {
     t.className = 'tab' + (i+1===n ? ' active-'+n : '');
   });
+  updateExtButtons();
   document.body.className = 'mode-' + n;
   document.getElementById('prog').className = 'progress-fill pf-' + (n<=4?n:1);
   document.getElementById('app-title').textContent = appTitles[n];
@@ -779,12 +837,18 @@ function resetCurrentApp() {
 // Init
 loadErrors();
 loadScores();
-for(let a=1;a<=3;a++) {
-  queues[a] = a===3 ? shuffle([...groupedIndices]) : shuffle([...Array(TOTAL).keys()]);
-}
-queues[4] = [];
-switchApp(1);
+document.addEventListener('DOMContentLoaded', () => {
+  for(let a=1;a<=3;a++) {
+    queues[a] = a===3 ? shuffle([...groupedIndices]) : shuffle([...Array(TOTAL).keys()]);
+  }
+  queues[4] = [];
+  switchApp(1);
+});
 </script>
-<div style="text-align:center;padding:1.2rem 0 1rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">v.004.1</div>
+<div class="bottom-nav">
+  <button class="bottom-btn" id="btn-repaso-ext" onclick="switchApp(4)">🔁 Repaso de errores</button>
+  <button class="bottom-btn" id="btn-errores-ext" onclick="switchApp(5)">❌ Ver errores <span id="err-count-badge"></span></button>
+</div>
+<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V. 004.2.1</div>
 </body>
 </html>
