@@ -2,6 +2,24 @@
 
 ---
 
+## V.005.3 — (actual)
+- **Card más limpia**: eliminados el título de modo, subtítulo 'Manual de Educación Vial' y contador de pregunta
+- **Racha de aciertos** movida entre las tabs y el contenido, visible en todos los modos
+- **Tab App 3**: renombrada de '🌙 Difícil' a '⚡ Veloz'
+- **Modo Flash**:
+  - Timer oculto mientras se muestra la imagen; aparece recién cuando la imagen desaparece y hay que elegir
+  - '¿Cuál era?' ahora aparece grande (1.15rem, negrita fuerte) como encabezado de las opciones
+- Removidas referencias JS a elementos eliminados (counter, app-title) para evitar errores silenciosos
+
+---
+
+## V.005.2 — (actual)
+- Score bar completamente centrado (eliminado margin-left:auto del botón)
+- Reiniciar movido debajo del score como botón de ancho completo con texto '↺ Reiniciar'
+- Racha de aciertos movida entre el score y el botón reiniciar (antes estaba oculta arriba de la card)
+
+---
+
 ## V.005.1 — (actual)
 - **Pulido general de UI/UX**:
   - Card con bordes más redondeados y sombra más profunda

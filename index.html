@@ -67,8 +67,13 @@
 
   /* ── STREAK ── */
   .streak-bar {
-    font-size: 0.75rem; color: #e67e22; font-weight: 700;
-    min-height: 18px; margin-top: 2px; letter-spacing: 0.03em;
+    font-size: 0.8rem;
+    color: #e67e22;
+    font-weight: 700;
+    min-height: 18px;
+    margin: 0.3rem 0 0;
+    letter-spacing: 0.03em;
+    text-align: center;
   }
 
   /* ── TIMER (App 3) ── */
@@ -214,31 +219,34 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
-    margin-top: 0.75rem;
-    font-size: 0.78rem;
+    gap: 1.2rem;
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
     color: #bbb;
   }
   .ok { color: #1a7a40; font-weight: 700; }
   .ko { color: #b03a2e; font-weight: 700; }
+  #pct { font-size: 0.72rem; color: #ccc; }
 
   /* ── REINICIAR BUTTON ── */
   .btn-reiniciar {
+    display: block;
+    width: 100%;
     background: none;
-    border: 1.5px solid #e0e0e0;
-    border-radius: 7px;
+    border: 1.5px solid #e8e8e8;
+    border-radius: 8px;
     color: #ccc;
-    font-size: 0.8rem;
-    padding: 3px 9px;
+    font-size: 0.75rem;
+    padding: 5px 0;
     cursor: pointer;
-    line-height: 1.4;
+    margin-top: 0.3rem;
     transition: border-color 0.15s, color 0.15s;
-    margin-left: auto;
+    text-align: center;
   }
   .btn-reiniciar:hover { border-color: #c0392b; color: #c0392b; }
 
   /* ── PROGRESS BAR ── */
-  .progress { height: 4px; background: #eee; border-radius: 2px; margin-top: 0.6rem; overflow: hidden; }
+  .progress { height: 4px; background: #eee; border-radius: 2px; margin-top: 0.55rem; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 2px; transition: width 0.35s ease; }
   .pf-1 { background: #1b2838; }
   .pf-2 { background: #b45000; }
@@ -332,6 +340,16 @@
     letter-spacing: 0.07em; text-transform: uppercase;
     color: #b45000; text-align: center;
     margin-bottom: 0.3rem; opacity: 0.9;
+    transition: font-size 0.2s, color 0.2s;
+  }
+  .flash-hint.pregunta {
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    color: #222;
+    font-weight: 800;
+    opacity: 1;
+    margin-bottom: 0.5rem;
   }
   .flash-wrap {
     display: flex; align-items: center; justify-content: center;
@@ -385,13 +403,8 @@
   <div class="tabs">
     <button class="tab active-1" onclick="switchApp(1)">✏️ Escribir</button>
     <button class="tab" onclick="switchApp(2)">⚡ Flash</button>
-    <button class="tab" onclick="switchApp(3)">🌙 Difícil</button>
+    <button class="tab" onclick="switchApp(3)">⚡ Veloz</button>
   </div>
-  <div class="app-title" id="app-title">Quiz · Escribir el nombre</div>
-  <div class="subtitle">Manual de Educación Vial · Municipio de Tigre</div>
-  <div class="counter" id="counter">Cargando...</div>
-  <div class="streak-bar" id="streak-bar"></div>
-
   <div class="timer-wrap" id="timer-wrap">
     <div class="timer-bar-bg"><div class="timer-bar" id="timer-bar"></div></div>
     <div class="timer-num" id="timer-num">10</div>
@@ -406,6 +419,7 @@
       <button class="btn btn-skip" onclick="a1Skip()">Ver nombre</button>
     </div>
   </div>
+  <div class="streak-bar" id="streak-bar"></div>
 
   <!-- APP 2 - FLASH MODE -->
   <!-- APP 2 ORIGINAL (Elegir) guardada como comentario:
@@ -473,13 +487,13 @@
 
   <div class="feedback" id="feedback"></div>
   <button class="btn btn-next" id="btn-next" onclick="nextRound()">Siguiente →</button>
-  <div class="progress" style="margin-top:0.6rem"><div class="progress-fill pf-1" id="prog"></div></div>
+  <div class="progress"><div class="progress-fill pf-1" id="prog"></div></div>
   <div class="score-bar">
     <span>✓ <span class="ok" id="sc">0</span></span>
     <span>✗ <span class="ko" id="sw">0</span></span>
-    <span id="pct" style="color:#bbb;font-size:0.75rem"></span>
-    <button class="btn-reiniciar" onclick="resetCurrentApp()" title="Reiniciar">↺</button>
+    <span id="pct"></span>
   </div>
+  <button class="btn-reiniciar" onclick="resetCurrentApp()">↺ Reiniciar</button>
 </div>
 
 <script>
@@ -535,7 +549,7 @@ function saveScores() {
 const appTitles = {
   1:'Quiz · Escribir el nombre',
   2:'Flash · Ver y recordar — 1.5 seg',
-  3:'Quiz · Modo Difícil — 10 seg',
+  3:'Veloz · 10 segundos por señal',
   4:'Repaso · Solo errores',
   5:'Mis señales falladas'
 };
@@ -654,7 +668,6 @@ function switchApp(n) {
   updateExtButtons();
   document.body.className = 'mode-' + n;
   document.getElementById('prog').className = 'progress-fill pf-' + (n<=4?n:1);
-  document.getElementById('app-title').textContent = appTitles[n];
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('sec'+n).classList.add('active');
   document.getElementById('feedback').style.display = 'none';
@@ -666,16 +679,13 @@ function switchApp(n) {
   // Score bar and progress only visible in quiz modes
   const scorebar = document.querySelector('.score-bar');
   const progress = document.querySelector('.progress');
-  const counter = document.getElementById('counter');
   if(n===5) {
     scorebar.style.display='none';
     progress.style.display='none';
-    counter.style.display='none';
     renderErrorsPanel();
   } else {
     scorebar.style.display='';
     progress.style.display='';
-    counter.style.display='';
     updateScore();
     nextRound();
   }
@@ -691,7 +701,6 @@ function nextRound() {
     if(queues[3].length===0) queues[3] = shuffle([...groupedIndices]);
     const ci = queues[3].pop();
     const done = TOTAL_GROUPED - queues[3].length;
-    document.getElementById('counter').textContent = `Pregunta ${done} de ${TOTAL_GROUPED}`;
     document.getElementById('prog').style.width = (done/TOTAL_GROUPED*100) + '%';
     const peers = shuffle(smartPeers[String(ci)] || []);
     const d1 = peers[0] ?? ((ci+1)%TOTAL);
@@ -714,7 +723,6 @@ function nextRound() {
     if(errKeys.length === 0) {
       document.getElementById('a4-empty').style.display = 'block';
       document.getElementById('a4-quiz').style.display = 'none';
-      document.getElementById('counter').textContent = '';
       document.getElementById('prog').style.width = '0%';
       return;
     }
@@ -725,7 +733,6 @@ function nextRound() {
     const validErr = Object.keys(errorMap).map(Number);
     const safeCI = validErr.includes(ci) ? ci : validErr[0];
     const done = errKeys.length - queues[4].length;
-    document.getElementById('counter').textContent = `Repaso ${done} de ${errKeys.length}`;
     document.getElementById('prog').style.width = (done/errKeys.length*100) + '%';
     // Build distractors from smart peers
     const peers = shuffle((smartPeers[String(safeCI)] || []).filter(p => p !== safeCI));
@@ -746,7 +753,6 @@ function nextRound() {
   if(queues[currentApp].length===0) queues[currentApp] = shuffle([...Array(TOTAL).keys()]);
   const ci = queues[currentApp].pop();
   const done = TOTAL - queues[currentApp].length;
-  document.getElementById('counter').textContent = `Pregunta ${done} de ${TOTAL}`;
   document.getElementById('prog').style.width = (done/TOTAL*100) + '%';
 
   if(currentApp === 1) {
@@ -793,10 +799,12 @@ function startFlash(ci) {
   const hint    = document.getElementById('flash-hint');
   const timerEl = document.getElementById('flash-timer-bar');
   const timerNumEl = document.getElementById('flash-timer-num');
+  const timerWrap = document.getElementById('flash-timer-wrap');
 
-  // Preparar opciones (ocultas durante el flash)
+  // Preparar opciones y timer (ocultos durante el flash)
   optWrap.style.display = 'none';
   optWrap.style.visibility = 'visible';
+  timerWrap.style.display = 'none';
   for(let i=0;i<4;i++) {
     const btn = document.getElementById('flash-opt'+i);
     btn.textContent = signals[flashOpts[i]].name;
@@ -807,6 +815,7 @@ function startFlash(ci) {
   box.classList.remove('hidden');
   box.style.display = 'flex';
   document.getElementById('flash-img').src = signals[ci].img;
+  hint.classList.remove('pregunta');
   hint.textContent = '¡Mirá bien!';
 
   window._flashCI = ci;
@@ -815,8 +824,10 @@ function startFlash(ci) {
   flashTimer = setTimeout(() => {
     // Ocultar imagen, mostrar opciones
     box.style.display = 'none';
-    optWrap.style.display = 'grid';
+    timerWrap.style.display = 'flex';
+    hint.classList.add('pregunta');
     hint.textContent = '¿Cuál era?';
+    optWrap.style.display = 'grid';
 
     // Fase 2: timer de 10s para elegir
     let timeLeft = 10;
@@ -1060,6 +1071,6 @@ document.addEventListener('DOMContentLoaded', () => {
   <button class="bottom-btn" id="btn-repaso-ext" onclick="switchApp(4)">🔁 Repaso de errores</button>
   <button class="bottom-btn" id="btn-errores-ext" onclick="switchApp(5)">❌ Ver errores <span id="err-count-badge"></span></button>
 </div>
-<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V.005.1</div>
+<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V.005.3</div>
 </body>
 </html>
