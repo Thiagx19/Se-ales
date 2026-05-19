@@ -912,12 +912,6 @@ function answerApp7(chosen) {
   if(correct) {
     scores[7].c++;
     updateStreak(true);
-    // Acierto en repaso: reduce error
-    if(errorMapT6[t6CurrentIdx]) {
-      errorMapT6[t6CurrentIdx]--;
-      if(errorMapT6[t6CurrentIdx]<=0) delete errorMapT6[t6CurrentIdx];
-      saveErrorsT6();
-    }
     fb.className = 'feedback correct'; fb.textContent = '✓ ¡Correcto!';
   } else {
     scores[7].w++;
@@ -1482,13 +1476,6 @@ function a4Pick(slot) {
   if(slot===correctSlot) {
     scores[4].c++;
     updateStreak(true);
-    // Correct in repaso: reduce error count
-    const idx = currentOpts[correctSlot].idx;
-    if(errorMap[idx]) {
-      errorMap[idx]--;
-      if(errorMap[idx] <= 0) delete errorMap[idx];
-      saveErrors();
-    }
     document.getElementById('a4-opt'+slot).classList.add('correct');
     fb.className = 'feedback correct'; fb.textContent = '✓ ¡Correcto! Error eliminado del repaso.';
   } else {
@@ -1571,6 +1558,6 @@ document.addEventListener('DOMContentLoaded', () => {
   <button class="bottom-btn-cross" id="btn-cross-to-t6"      style="display:none" onclick="switchApp(8)">📋 Errores de Teoría</button>
   <button class="bottom-btn-cross" id="btn-cross-to-senales" style="display:none" onclick="switchApp(5)">🚦 Errores de Señales</button>
 </div>
-<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V.6.6</div>
+<div style="text-align:center;padding:0.5rem 0 0.8rem;font-size:0.85rem;color:#aaa;letter-spacing:0.12em;font-family:monospace;">V.6.7</div>
 </body>
 </html>

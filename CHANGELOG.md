@@ -165,3 +165,8 @@
   - "📋 Errores de Teoría" → visible cuando estás en app 4 o 5 (repaso/errores señales)
   - "🚦 Errores de Señales" → visible cuando estás en app 7 u 8 (repaso/errores teoría)
   - Siempre visibles al estar en las secciones correspondientes, sin condición adicional
+
+---
+
+## V.6.7
+- **Errores persistentes en repaso**: acertar en modo Repaso de Señales (app 4) y Repaso de Teoría (app 7) ya no elimina el error del registro. Los errores solo se limpian con "Limpiar errores" o "↺ Reiniciar"
